@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  db:
+  image: mysql
+  container_name: mysql-task-management
+  restart: always
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: db-task-management
+    MYSQL_USER: root
+    MYSQL_PASSWORD: root
+  app:
+    image: node
+    build: .
+    ports: '3000:3000'
+    dependes_on: db
