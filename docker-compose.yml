@@ -2,16 +2,33 @@ version: '3.1'
 
 services:
   db:
-  image: mysql
-  container_name: mysql-task-management
-  restart: always
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-    MYSQL_DATABASE: db-task-management
-    MYSQL_USER: root
-    MYSQL_PASSWORD: root
+    image: mysql
+    container_name: mysql-task-management
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db-task-management
+      MYSQL_PASSWORD: root
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+      - my-project
+
   app:
-    image: node
-    build: .
-    ports: '3000:3000'
-    dependes_on: db
+    container_name: app-task-management
+    image: node:20
+    ports:
+      - '3000:3000'
+    working_dir: /app
+    volumes:
+      - ./src:/app
+
+    command: sh -c "npm install && npm run start"
+    depends_on:
+      - db
+    networks:
+      - my-project
+
+networks:
+  my-project:
+    driver: bridge
