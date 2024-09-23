@@ -1,3 +1,6 @@
 const { userQueriers } = require('../queries/user.queries');
+const { taskQueries } = require('../queries/task.queries');
 
-module.exports = { userQueriers };
+const queries = [userQueriers, taskQueries];
+
+module.exports = { queries };
