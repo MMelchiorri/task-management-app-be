@@ -1,14 +1,24 @@
+require('./services/Database');
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('./services/Database');
-
-require('dotenv').config();
+const routes = require('./routes');
+const router = express.Router();
 
 const app = express();
 
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT_APP;
+
+routes.forEach((route) => {
+  router[route.method](
+    route.path,
+    [route.controller].filter((fn) => fn != undefined)
+  );
+});
+
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
