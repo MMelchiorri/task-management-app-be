@@ -49,6 +49,7 @@ class Database {
         if (!!rows.length) {
         } else {
           this.connection.query(query.createTable);
+          this.connection.end();
         }
       });
     } catch (error) {
@@ -56,7 +57,23 @@ class Database {
       throw error;
     }
   }
+
+  async list(tableName) {
+    try {
+      this.connection = await mysql.createConnection({
+        host: this.host || 'localhost',
+        user: this.user,
+        database: this.database,
+        password: this.password,
+      });
+      result = await this.connection.query(queries[tableName].list);
+      await this.connection.end();
+      return result[0];
+    } catch (error) {
+      console.log('Error occurred:', error);
+    }
+  }
 }
 
-const db = Database.getInstance().connect();
+const db = Database.getInstance();
 module.exports = db;
