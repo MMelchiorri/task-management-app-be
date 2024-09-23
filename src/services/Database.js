@@ -1,8 +1,7 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
-const { userQueriers } = require('../queries/index');
-const { query } = require('express');
-const tableName = 'User';
+const { queries } = require('../queries/index');
+
 class Database {
   constructor(host, user, password, database) {
     this.host = host;
@@ -41,24 +40,21 @@ class Database {
         password: this.password,
       });
       console.log('Database connected');
-      const [rows] = await this.connection.query(`SHOW TABLES LIKE ?`, [
-        tableName,
-      ]);
-      await this.connection.query('DROP TABLE User');
-      if (rows.length > 0) {
-        console.log(`Tables with name ${tableName} already exists`);
-      } else {
-        const result = userQueriers.filter((query) =>
-          ['createTable'].includes(Object.keys(query))
+
+      queries.forEach(async (query) => {
+        const rows = await this.connection.query(
+          'SHOW TABLES LIKE ?',
+          query.table
         );
-        console.log(result);
-      }
+        if (!!rows.length) {
+        } else {
+          this.connection.query(query.createTable);
+        }
+      });
     } catch (error) {
       console.error('Error connecting to the database:', error);
       throw error;
     }
-
-    return this.connection;
   }
 }
 
