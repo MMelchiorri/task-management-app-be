@@ -1,6 +1,6 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
-const { queries } = require('../queries/index');
+const queries = require('../queries/index');
 
 class Database {
   constructor(host, user, password, database) {
