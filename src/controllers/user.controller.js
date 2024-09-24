@@ -5,7 +5,6 @@ const tableName = 'user';
 const list = async (req, res, next) => {
   try {
     const result = await db.list(tableName);
-    console.log(result);
     result.length === 0
       ? res.status(200).send({ message: 'the database is empty' })
       : res.status(200).send(result);
