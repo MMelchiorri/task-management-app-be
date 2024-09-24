@@ -59,19 +59,27 @@ class Database {
   }
 
   async list(tableName) {
-    try {
-      this.connection = await mysql.createConnection({
-        host: this.host || 'localhost',
-        user: this.user,
-        database: this.database,
-        password: this.password,
-      });
-      result = await this.connection.query(queries[tableName].list);
-      await this.connection.end();
-      return result[0];
-    } catch (error) {
-      console.log('Error occurred:', error);
-    }
+    this.connection = await mysql.createConnection({
+      host: this.host || 'localhost',
+      user: this.user,
+      database: this.database,
+      password: this.password,
+    });
+    const result = await this.connection.query(queries[tableName].list);
+    await this.connection.end();
+    return result[0];
+  }
+
+  async create(tableName, data) {
+    this.connection = await mysql.createConnection({
+      host: this.host || 'localhost',
+      user: this.user,
+      database: this.database,
+      password: this.password,
+    });
+    let result = await this.connection.query(queries[tableName].insert, data);
+    await this.connection.end();
+    return result[0];
   }
 }
 
