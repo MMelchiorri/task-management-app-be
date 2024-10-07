@@ -14,9 +14,10 @@ const PORT = process.env.PORT_APP;
 routes.forEach((route) => {
   router[route.method](
     route.path,
-    [authMiddleware(route.roles), route.controller].filter(
-      (fn) => fn != undefined
-    )
+    [
+      route.roles ? authMiddleware(route.roles) : undefined,
+      route.controller,
+    ].filter((fn) => fn != undefined)
   );
 });
 
